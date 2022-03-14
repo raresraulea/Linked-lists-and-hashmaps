@@ -1,0 +1,182 @@
+
+#include <iostream>
+#include <algorithm>
+#include <queue>
+#include <stack>
+#include <vector>
+#include <string>
+#include <list>
+
+#define BIG unsigned long long int
+
+using namespace std;
+
+void generareQueue(queue<int>& queue, int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+        queue.push(rand() % 20);
+
+    }
+}
+void generareStack(stack<int>& st, int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+        st.push(rand() % 20);
+
+    }
+}
+void generareVector(vector<int>& v, int n, int domeniu)
+{
+    for (int i = 0; i < n; i++)
+    {
+        v.push_back(rand() % domeniu);
+    }
+    //v.push_back(a + rand%(b-a+1));
+}
+void generareList(list<int>& l, int n, int domeniu)
+{
+    for (int i = 0; i < n; i++)
+    {
+        l.push_back(rand() % domeniu);
+    }
+}
+void afisLista(list <int> list)
+{
+    std::list<int>::iterator it;
+    for (it = list.begin(); it != list.end(); it++)
+        cout << *it << ' ';
+    cout << endl;
+}
+void afis(queue <int> Q)
+{
+    while (!Q.empty())
+    {
+        cout << Q.front() << ' ';
+        Q.pop();
+    }
+    cout << endl;
+}
+void afis_stack(stack<int> st)
+{
+    cout << "Stiva este: ";
+    while (!st.empty())
+    {
+        cout << st.top() << ' ';
+        st.pop();
+    }
+    cout << endl;
+}
+void afVect(vector<int> v)
+{
+    std::vector<int>::iterator it;
+    for (it = v.begin(); it != v.end(); it++)
+    {
+        cout << *it << " ";
+    }
+    cout << endl;
+}
+int numberOfDigits(BIG n, int base)
+{
+    return (int)(floor(log(n) / log(base)) + 1);
+}
+void radixSort(vector <int>& v)
+{
+    int maxNumberOfDigits = numberOfDigits(*max_element(v.begin(), v.end()), 10);
+    int p = 1;
+    queue <int> q[10];
+    while (p <= pow(10, maxNumberOfDigits))
+    {
+        for (size_t i = 0; i < v.size(); i++)
+        {
+            int currentValue = v[i] / p % 10;
+            q[currentValue].push(v[i]);
+        }
+        v.clear();
+        for (int k = 0; k < 10; k++)
+        {
+            while (!q[k].empty())
+            {
+                v.push_back(q[k].front());
+                q[k].pop();
+            }
+        }
+        p *= 10;
+    }
+}
+//radix-sort considerand elementele in orice baza data
+//este necesara transmiterea celor n=baza cozi de lucru ca parametru dupa init in main
+void radixSort_randomBase(vector <int>& v, int base, queue <int> q[])
+{
+    int maxNumberOfDigits = numberOfDigits(*max_element(v.begin(), v.end()), base);
+    int p = 1;
+
+    while (p <= pow(base, maxNumberOfDigits))
+    {
+        for (size_t i = 0; i < v.size(); i++)
+        {
+            int currentValue = v[i] / p % base;
+            q[currentValue].push(v[i]);
+        }
+        v.clear();
+        for (int k = 0; k < base; k++)
+        {
+            while (!q[k].empty())
+            {
+                v.push_back(q[k].front());
+                q[k].pop();
+            }
+        }
+        p *= base;
+    }
+}
+void radixSort_constMem(list <int>& list, int base, queue <int> q[])
+{
+    int maxNumberOfDigits = numberOfDigits(*max_element(list.begin(), list.end()), base);
+    int p = 1;
+    std::list<int>::iterator it;
+
+    while (p <= pow(base, maxNumberOfDigits))
+    {
+        for (it = list.begin(); it != list.end();)
+        {
+            int currentValue = (*it) / p % base;
+            //cout << currentValue << endl;
+            q[currentValue].push(*it);
+            
+            it = list.erase(it);
+        }
+
+        for (int k = 0; k < base; k++)
+        {
+            while (!q[k].empty())
+            {
+                list.push_back(q[k].front());
+                q[k].pop();
+            }
+        }
+        p *= base;
+    }
+}
+
+int main()
+{
+    queue<int> Q, q_pare, q[10];
+    stack<int>st1;
+    list <int> list;
+    int n = 10;
+    vector <int> v;
+    /* generareVector(v, n, 100000000);
+     afVect(v);
+     radixSort_constMem(v, 16, q);
+     afVect(v);*/
+    generareList(list, n, 100000000);
+    afisLista(list);
+    radixSort_constMem(list, 10, q);
+    afisLista(list);
+    
+
+
+}
+

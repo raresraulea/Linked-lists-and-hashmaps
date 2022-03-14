@@ -1,0 +1,52 @@
+#include <iostream>
+#include<fstream>
+
+using namespace std;
+
+ifstream fin("Text.txt");
+ofstream fout("Text1.txt");
+
+int n, m, k;
+int A[1001], B[1001];
+
+void readFromFile()
+{
+    fin >> n >> m >> k;
+    for (int i = 0; i < n; i++)
+        fin >> A[i];
+    for (int i = 0; i < m; i++)
+        fin >> B[i];
+}
+void perechi()
+{
+    //tabloul care specifica urmatorul index cu care se incearca formarea unei 
+    //perechi pentru cei fiecare n indecsi din primul tablou
+    
+    int* indexArray = new int[n+1];
+    for (int i{}; i < n; i++)
+        indexArray[i] = 0;
+      
+    while (k)
+    {
+        //cout << k << endl;
+        int minsum = INT_MAX;
+        int minindex = 0;
+        for (int i = 0; i < n; i++)
+        {
+            if (indexArray[i] < m && (A[i] + B[indexArray[i]] < minsum))
+            {
+                minindex = i;
+                minsum = A[i] + B[indexArray[i]];
+            }
+        }
+        fout << A[minindex] << ' ' << B[indexArray[minindex]] << endl;
+        indexArray[minindex]++;
+        k--;
+    }
+}
+int main()
+{  
+    readFromFile();
+    perechi();
+}
+

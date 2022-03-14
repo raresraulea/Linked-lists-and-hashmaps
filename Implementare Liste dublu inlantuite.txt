@@ -1,0 +1,139 @@
+
+#include <iostream>
+#include <algorithm>
+#define GENERIC template <class tip>
+
+using namespace std;
+
+GENERIC struct node
+{
+	tip data;
+	node* prev;
+	node* next;
+	node* first;
+	node* last;
+
+	node()
+	{
+		data = INT_MIN;
+		prev = NULL;
+		next = NULL;
+	}
+	node(tip myVal)
+	{
+		data = myVal;
+		next = NULL;
+		prev = NULL;
+	}
+	void afis()
+	{
+		node* p = first;
+		while (p != NULL)
+		{
+			cout << p->data << " -> ";
+			p = p->next;
+		}
+		cout << "NULL" << endl;
+	}
+	void afis_invers()
+	{
+		for (auto it = last; it != NULL; it = it->prev)
+			cout << it->data << ' ';
+	}
+	void push_front(tip val)
+	{
+		node* nodeToInsert = new node(val);
+		if (first == NULL)
+		{
+			first = nodeToInsert;
+			last = nodeToInsert;
+		}
+		else
+		{
+			nodeToInsert->next = first;
+			first = nodeToInsert;
+		}
+	}
+	void push_back(tip val)
+	{
+		node* nodeToInsert = new node(val);
+		if (first == NULL)
+		{
+			first = nodeToInsert;
+			last = nodeToInsert;
+		}
+		else
+		{
+			node* it;
+			for (it = first; it->next != NULL; it = it->next)
+			{
+			}
+			it->next = nodeToInsert;
+			last = nodeToInsert;
+			last->prev = it;
+		}
+	}
+	void push_after(node* addr, tip val)
+	{
+		if (addr == NULL)
+			push_front(val);
+		else
+		{
+			node* nodeToInsert = new node(val);
+			node* temp = addr->next;
+
+			//verific daca trebuie inserat la final si modific last
+			if (temp == NULL) last = nodeToInsert;
+
+			addr->next = nodeToInsert;
+			nodeToInsert->next = temp;
+			nodeToInsert->prev = addr;
+		}
+	}
+	node* findAddr(tip val)
+	{
+		if (first == NULL)
+			return NULL;
+		else if (val < first->data)
+			return NULL;
+		else
+		{
+			node* it1;
+			node* it2;
+
+			//SIMPLIFICAREA FATA DE SINGLE LINKED LIST
+			for (it1 = first->next; it1 != NULL; it1 = it1->next)
+			{
+				if (it1->data >= val)
+					return it1->prev;
+			}
+			return last;
+		}
+	}
+};
+
+int main()
+{
+	node<int> List;
+	List.first = NULL;
+	List.last = NULL;
+	int n;
+	cout << "Introduceti numarul de noduri: ";
+	cin >> n;
+	int fst = 1;
+	for (int i = 0; i < n; i++)
+	{
+		int x;
+		if (fst) {
+			cout << "Introduceti primul numar: ";
+			fst = 0;
+		}
+		else cout << "Introduceti al " << i + 1 << "-lea numar: ";
+		cin >> x;
+		List.push_after(List.findAddr(x), x);
+	}
+	List.afis();
+	//List.afis_invers();
+
+}
+

@@ -1,0 +1,101 @@
+#include <iostream>
+#include <fstream>
+#include <queue>
+#include<string>
+
+using namespace std;
+
+ifstream fin("Textin.txt");
+ofstream fout("Output.txt");
+
+int n, m, q;
+
+char mat[205][205];
+int matCopie[205][205];
+
+queue <pair<int, int>> coada;
+
+int dirX[4] = { 0 , 0, 1, -1 };
+int dirY[4] = { 1 , -1, 0, 0 };
+
+struct porti
+{
+    int xs, ys, xf, yf;
+};
+
+int k;
+porti v[25];
+
+void readFromFile()
+{
+    fin >> n >> m;
+    char c;
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = 1; j <= m; j++)
+        {
+            fin >> c;
+            mat[i][j] = c;
+        }
+    }
+    fin >> q;
+   
+    for (int i = 0; i < q; i++)
+    {
+        fin >> v[i].xs >> v[i].ys >> v[i].xf >> v[i].yf;
+    }
+    for (int i = 0; i < k; i++ )
+        cout << v[k].xs << ' ' << v[k].ys << ' ' << v[k].xf << ' ' << v[k].yf << endl;
+}
+bool OK(int i, int j)
+{
+    return (i >= 1) && (i <= n) && (j >= 1) && (j <= m) && (mat[i][j] == 'a')&&(matCopie[i][j]<1);
+}
+int Lee(int xstart, int ystart, int xfinal, int yfinal)
+{
+    int i, j, ni, nj; //nexti nextj
+    coada.push(make_pair(xstart, ystart));
+    matCopie[xstart][ystart] = 1;
+    
+    while (!coada.empty())
+    {
+        i = coada.front().first;
+        j = coada.front().second; 
+        coada.pop();
+        for (int dir = 0; dir < 4; dir++)
+        {
+            ni = i + dirY[dir];
+            nj = j + dirX[dir];
+            if (OK(ni, nj))
+            {
+                matCopie[ni][nj] = matCopie[i][j] + 1;
+                coada.push(make_pair(ni, nj));
+            }
+        }        
+    }
+    if (mat[xstart][ystart] == 'b' || mat[xfinal][yfinal] == 'b' || (matCopie[xfinal][yfinal] == 0))
+        return -1;
+    return matCopie[xfinal][yfinal];
+}
+void curata(int a[205][205], int n, int m)
+{
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = 1; j <= m; j++)
+        {
+            matCopie[i][j]=0;
+        }
+    }
+}
+int main()
+{
+    readFromFile();
+    
+    for (int i = 0; i < q; i++)
+    {
+        fout << Lee(v[i].xs, v[i].ys, v[i].xf, v[i].yf)<<endl;
+        curata(matCopie, n,m);
+    }
+    
+}
+

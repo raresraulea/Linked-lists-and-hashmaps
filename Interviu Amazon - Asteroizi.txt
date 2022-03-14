@@ -1,0 +1,45 @@
+
+#include <iostream>
+#include <stack>
+#include <vector>
+#define maxasteroids 1000
+
+using namespace std;
+
+vector <int> vectorAfterCollisions(vector <int>& asteroids)
+{
+    stack <int> stack;
+    for (int i = 0; i < asteroids.size(); i++)
+    {
+        if (asteroids[i] > 0)
+            stack.push(asteroids[i]);
+        else
+        {
+            while (!stack.empty() && stack.top() <= abs(asteroids[i]) && stack.top() >0)
+            {
+                stack.pop();
+            }
+            if(stack.empty() || stack.top() < 0)
+                stack.push(asteroids[i]);
+        }
+    }
+    vector <int> retVect;
+    //retVect.resize(stack.size());
+    auto begin = retVect.begin();
+    while (!stack.empty())
+    {
+        retVect.insert(begin, stack.top());
+        stack.pop();
+        begin = retVect.begin();
+    }
+    return retVect;
+}
+
+int main()
+{
+    vector <int> asteroids = { 10,2,-5, -15, 20 };
+    vector <int> result = vectorAfterCollisions(asteroids);
+    for (auto x : result)
+        cout << x << ' ';
+}
+

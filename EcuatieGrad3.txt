@@ -1,0 +1,97 @@
+
+
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+double f(double x, int a, int b, int c, int d) {
+	return a * x * x * x + b * x * x + c * x + d;
+}
+void ecGrd2(double A, double B, double C)
+{
+	double x1, x2;
+	double D = B * B - 4 * A * C;
+	
+	if (D >= 0)
+	{
+		x1 = (-B - sqrt(D)) / (2 * A);
+		x2 = (-B + sqrt(D)) / (2 * A);
+		cout << "x2 = "<< x1 << endl << "x3 = "<< x2 << endl;
+	}
+	else {
+		D = abs(D);
+		double pr, pi;
+		pr = -B / (2 * A);
+		pi = sqrt(D) / (2 * A);
+		cout << "x1 = " << pr << "+i*(" << pi << ")" << endl;
+		cout << "x2 = " << pr << "-i*(" << pi <<")"<< endl;
+
+	}
+
+}
+void transfInGradDoi(double x, int a, int b, int c, int d)
+{
+	double A = a;
+	double B = x * A + b;
+	double C = x * B + c;
+	ecGrd2(A, B, C);
+}
+
+int main()
+{
+	double divA[100], divD[100], radPosibile[100];
+	int k = 0, l=0, m = 0, a = 1, b = 2, c = 2, d = 1, i, j;
+	for (int i = 1; i <= abs(d)/2 +1; i++)
+	{
+		if (d % i == 0)
+		{
+			divD[k++] = i;
+			divD[k++] = -i;
+		}
+	}
+	for (j = 1; j <= abs(a)/2 +1; j++)
+	{
+		if (a % j == 0)
+		{
+			divA[l++] = j;
+			
+		}
+	}
+	for (i = 0; i < k; i++)
+	{
+		for (j = 0; j < l; j++)
+		{
+			radPosibile[m++] = divD[i] / divA[j];
+		}
+	}
+	/* Afisare vectori
+	
+	for (i = 0; i < k; i++)
+	{
+		cout << divD[i]<< ' ';
+	}
+	cout << endl;
+	for (i = 0; i < l; i++)
+	{
+		cout << divA[i] << ' ';
+	}
+	cout << endl;
+	for (i = 0; i < m; i++)
+	{
+		cout << radPosibile[i] << ' ';
+	}
+	*/
+	for (i = 0; i < m; i++)
+	{
+		if (f(radPosibile[i], a, b, c, d) == 0)
+		{
+			cout << "Radacinile ecuatiei "<< a<<"X^3 +("<< b<< ")*X^2 +("<< c <<")*X +("<<d<<") = 0 sunt: " <<endl <<"x1 = "<< radPosibile[i] << endl;
+			transfInGradDoi(radPosibile[i], a, b, c, d);
+			break;
+		}
+	}
+
+		
+}
+
+
